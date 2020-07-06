@@ -38,6 +38,7 @@ pytorch = PyTorch (...)
 _defaults = {}
 _default_session = None
 
+boto3_sagemaker_client = None
 
 def set_default_vpc(subnet_ids, security_group_ids):
     """
@@ -106,14 +107,15 @@ def _insert_defaults(params, **kwargs):
 
 
 def set_session_defaults(sagemaker_session):
-    global _default_session
+    global _default_session, boto3_sagemaker_client
 
     sm_client = boto3.client('sagemaker')
 
     event_system = sm_client.meta.events
     event_system.register('provide-client-params.sagemaker', _insert_defaults)
 
-    sagemaker_session.sagemaker_client = sm_client
+    boto3_sagemaker_client = sm_client
+    sagemaker_session.sagemaker_client = boto3_sagemaker_client
     if _default_session is None:
         _default_session = sagemaker_session
     return sagemaker_session
@@ -138,6 +140,11 @@ def _get_default_session():
     return session
 
 _action_default_map = {
+    'CreateModel': {
+        'ExecutionRoleArn': _get_default_role,
+        'VpcConfig/SecurityGroupIds': get_default_vpc_security_group_ids,
+        'VpcConfig/Subnets': get_default_vpc_subnet_ids,
+    },
     'CreateTrainingJob': {
         'RoleArn': _get_default_role,
         'VpcConfig/SecurityGroupIds': get_default_vpc_security_group_ids,
