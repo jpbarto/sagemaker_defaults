@@ -140,10 +140,24 @@ def _get_default_session():
     return session
 
 _action_default_map = {
+    'CreateEndpointConfig': {
+        'DataCaptureConfig/KmsKeyId': get_default_s3_key_id,
+        'KmsKeyId': get_default_ebs_key_id,
+        'Tags': get_default_tags
+    },
     'CreateModel': {
         'ExecutionRoleArn': _get_default_role,
         'VpcConfig/SecurityGroupIds': get_default_vpc_security_group_ids,
         'VpcConfig/Subnets': get_default_vpc_subnet_ids,
+        'Tags': get_default_tags
+    },
+    'CreateMonitoringSchedule': {
+        'MonitoringScheduleConfig/MonitoringJobDefinition/MonitoringOutputConfig/KmsKeyId': get_default_s3_key_id,
+        'MonitoringScheduleConfig/MonitoringJobDefinition/MonitoringResources/ClusterConfig/VolumeKmsKeyId': get_default_ebs_key_id,
+        'MonitoringScheduleConfig/MonitoringJobDefinition/NetworkConfig/VpcConfig/SecurityGroupIds': get_default_vpc_security_group_ids,
+        'MonitoringScheduleConfig/MonitoringJobDefinition/NetworkConfig/VpcConfig/Subnets': get_default_vpc_subnet_ids,
+        'MonitoringScheduleConfig/MonitoringJobDefinition/RoleArn': get_execution_role,
+        'Tags': get_default_tags
     },
     'CreateTrainingJob': {
         'RoleArn': _get_default_role,
@@ -155,23 +169,18 @@ _action_default_map = {
     },
     'CreateProcessingJob': {
         'RoleArn': _get_default_role,
-        'NetworkConfig/VpcConfig/SecurityGroupIds':
-        get_default_vpc_security_group_ids,
+        'NetworkConfig/VpcConfig/SecurityGroupIds': get_default_vpc_security_group_ids,
         'NetworkConfig/VpcConfig/Subnets': get_default_vpc_subnet_ids,
         'ProcessingOutputConfig/KmsKeyId': get_default_s3_key_id,
-        'ProcessingResources/ClusterConfig/VolumeKmsKeyId':
-        get_default_ebs_key_id,
+        'ProcessingResources/ClusterConfig/VolumeKmsKeyId': get_default_ebs_key_id,
         'Tags': get_default_tags
     },
     'CreateAutoMLJob': {
         'RoleArn': _get_default_role,
-        'AutoMLJobConfig/SecurityConfig/VpcConfig/SecurityGroupIds':
-        get_default_vpc_security_group_ids,
-        'AutoMLJobConfig/SecurityConfig/VpcConfig/Subnets':
-        get_default_vpc_subnet_ids,
+        'AutoMLJobConfig/SecurityConfig/VpcConfig/SecurityGroupIds': get_default_vpc_security_group_ids,
+        'AutoMLJobConfig/SecurityConfig/VpcConfig/Subnets': get_default_vpc_subnet_ids,
         'OutputDataConfig/KmsKeyId': get_default_s3_key_id,
-        'AutoMLJobConfig/SecurityConfig/VolumeKmsKeyId':
-        get_default_ebs_key_id,
+        'AutoMLJobConfig/SecurityConfig/VolumeKmsKeyId': get_default_ebs_key_id,
         'Tags': get_default_tags
     }
 }
